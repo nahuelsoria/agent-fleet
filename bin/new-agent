@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Scaffold a new agent: bin/new-agent <name>
+# Creates agents/<name>/run.sh from a template, wired to the fleet core.
+set -Eeuo pipefail
+
+name="${1:-}"
+if [ -z "$name" ]; then
+    echo "usage: bin/new-agent <name>" >&2
+    exit 1
+fi
+
+FLEET_HOME="$(cd "$(dirname "$0")/.." && pwd)"
+dir="$FLEET_HOME/agents/$name"
+
+if [ -e "$dir" ]; then
+    echo "agent '$name' already exists at $dir" >&2
+    exit 1
+fi
+
+mkdir -p "$dir/logs"
+cat > "$dir/run.sh" <<EOF
+#!/usr/bin/env bash
+# Agent: $name
+set -Eeuo pipefail
+source "\$(dirname "\$0")/../../lib/fleet.sh"
+
+AGENT="$name"
+log "\$AGENT" "started"
+
+# --- do the work here -------------------------------------------------------
+# notify "something happened"        # -> Telegram / webhook (see .env)
+# log "\$AGENT" "did the thing"       # -> agents/$name/logs/YYYY-MM-DD.log
+
+log "\$AGENT" "finished"
+EOF
+
+chmod +x "$dir/run.sh"
+echo "created $dir/run.sh"
+echo "next: edit it, then schedule with cron, e.g.:"
+echo "  0 * * * * $dir/run.sh"

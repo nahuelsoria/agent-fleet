@@ -1,0 +1,14 @@
+# Secrets
+.env
+
+# Per-agent runtime artifacts
+agents/*/logs/
+agents/*/workspaces/
+agents/*/tmp/
+agents/*/last-state
+agents/*/*.lock
+agents/*/.run.lock
+
+# OS / editor noise
+.DS_Store
+*.swp

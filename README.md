@@ -1,5 +1,13 @@
 # agent-fleet
 
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+![Shell: bash](https://img.shields.io/badge/shell-bash-4EAA25?logo=gnubash&logoColor=white)
+![Dependencies: none](https://img.shields.io/badge/dependencies-none-brightgreen.svg)
+![PRs welcome](https://img.shields.io/badge/PRs-welcome-blueviolet.svg)
+
+<!-- Demo GIF: record one with docs/recording-a-demo.md, then uncomment: -->
+<!-- ![agent-fleet demo](docs/demo.gif) -->
+
 A tiny, dependency-free framework for running **scheduled agents on a single box** —
 whether that agent is a shell one-liner, a Python script, or a headless LLM CLI
 (Claude Code, Codex, Gemini). One shared core gives every agent the same three
@@ -25,6 +33,23 @@ Design choices that come from running this for real:
   plain text if the payload fails to parse — a bad character in an LLM summary
   won't swallow your alert.
 - **Secrets in one gitignored place.** `.env` at the root, loaded once, `chmod 600`.
+
+## How it works
+
+```mermaid
+flowchart LR
+    cron([cron]) --> run["agents/&lt;name&gt;/run.sh"]
+    run -- "source" --> core["lib/fleet.sh"]
+    env[".env<br/>(secrets, gitignored)"] -. loaded by .-> core
+    core --> log["log()<br/>daily per-agent logs"]
+    core --> notify["notify()"]
+    notify -->|only on problems| tg["Telegram"]
+    notify -->|only on problems| wh["Slack / Discord / webhook"]
+```
+
+Each agent is one `run.sh` that sources the shared core. `cron` runs it on a
+schedule; the core loads `.env`, gives it `log()` and `notify()`, and agents
+stay silent unless something is actually wrong.
 
 ## Layout
 

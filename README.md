@@ -5,8 +5,9 @@
 ![Dependencies: none](https://img.shields.io/badge/dependencies-none-brightgreen.svg)
 ![PRs welcome](https://img.shields.io/badge/PRs-welcome-blueviolet.svg)
 
-<!-- Demo GIF: record one with docs/recording-a-demo.md, then uncomment: -->
-<!-- ![agent-fleet demo](docs/demo.gif) -->
+<p align="center">
+  <img src="docs/demo.svg" alt="agent-fleet demo — a broken backup raises a red alert, a healthy check stays silent, and a new agent is one command" width="720">
+</p>
 
 A tiny, dependency-free framework for running **scheduled agents on a single box** —
 whether that agent is a shell one-liner, a Python script, or a headless LLM CLI

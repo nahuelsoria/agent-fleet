@@ -33,8 +33,9 @@ agent-fleet/
 ├── lib/fleet.sh          # source this — resolves paths, loads .env, defines log() + notify()
 ├── bin/new-agent         # scaffold a new agent
 ├── agents/
-│   └── vps-health/run.sh # example: red-only VPS health check
-└── .env.example          # copy to .env
+│   ├── vps-health/run.sh    # example: red-only VPS health check
+│   └── backup-verify/run.sh # example: is my latest backup fresh & valid?
+└── .env.example             # copy to .env
 ```
 
 ## Quick start
@@ -54,6 +55,17 @@ Schedule it:
 ```cron
 0 9 * * * /path/to/agent-fleet/agents/vps-health/run.sh
 ```
+
+## Bundled example agents
+
+Both are red-only (silent when healthy) and driven entirely by `.env`:
+
+| Agent | What it checks |
+|---|---|
+| `vps-health` | Disk %, available memory, failed systemd units, oversized logs |
+| `backup-verify` | Your latest backup exists, is fresh, is a sane size, and (gzip) isn't corrupt |
+
+Copy one as a starting point, or scaffold a fresh agent with `bin/new-agent`.
 
 ## Write your own agent
 
